@@ -59,12 +59,32 @@ ConnectDB().then(() => {
     type Users {
         name: String
     }
+    type Mutation {
+        createProduct(product: CreateProductInput): Products
+    }
+    input CreateProductInput {
+        title: String!
+        description: String!,
+        price: String!
+    }
     `;
     const resolvers = {
         Query: {
             products: () => db.products.findAll({}),
             users: () => db.users.findAll({}),
         },
+        Mutation: {
+            createProduct: async (_, { product: { title, description, price } }) => {
+                const newProduct = {
+                    title,
+                    description,
+                    price
+                };
+                db.products.create(newProduct);
+                return newProduct;
+            },
+        },
+
     };
     const server = new ApolloServer({ typeDefs, resolvers });
     startStandaloneServer(server, {
