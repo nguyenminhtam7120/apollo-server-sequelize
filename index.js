@@ -36,6 +36,9 @@ ConnectDB().then(() => {
         published: { type: Sequelize.BOOLEAN },
         price: { type: Sequelize.STRING }
     });
+    db.users = sequelize.define("users", {
+        name: { type: Sequelize.STRING },
+    })
     // #endregion
 
     db.sequelize.sync();
@@ -46,22 +49,27 @@ ConnectDB().then(() => {
     const gql = require("graphql-tag");
     const typeDefs = gql`
     type Query {
-        allProduct: [Products]
+        products: [Products],
+        users: [Users]
     }
     type Products {
         title: String
         description: String
     }
+    type Users {
+        name: String
+    }
     `;
     const resolvers = {
         Query: {
-            allProduct: () => db.products.findAll({}),
+            products: () => db.products.findAll({}),
+            users: () => db.users.findAll({}),
         },
     };
     const server = new ApolloServer({ typeDefs, resolvers });
     startStandaloneServer(server, {
         listen: { port: 4000 },
-    }).then(({ url }) => { console.log(LCINFO, `=> Server ready at ${url}`); })
+    }).then(({ url }) => { console.log(LCINFO, `🚀 Server ready at ${url}`); })
         .catch(err => { console.log(LCERROR, '=> ' + err.message); });
     // #endregion
 
