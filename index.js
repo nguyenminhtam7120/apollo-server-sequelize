@@ -6,7 +6,7 @@ const LCSUCCESS = '\x1b[32m%s\x1b[0m'; //green
 
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(
-    'graphpl', // your database
+    'graphpl', // your database's name
     'sa', // your username
     'admin123', // your password
     {
